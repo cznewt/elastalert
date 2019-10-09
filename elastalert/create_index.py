@@ -52,7 +52,13 @@ def create_index_mappings(es_client, ea_index, recreate=False, old_ea_index=None
             except NotFoundError:
                 # Why does this ever occur?? It shouldn't. But it does.
                 pass
-        es_index.create(index_name)
+        es_index.create(index=index_name, body={
+            'settings': {
+                'index': {
+                    'number_of_shards': 1
+                }
+            }
+        })
 
     # To avoid a race condition. TODO: replace this with a real check
     time.sleep(2)
